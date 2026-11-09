@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Empire Clash: a superhero strategy board game by Juan Mesa. The roster, how it plays, live-ops and how it was made.">
+<meta property="og:title" content="Empire Clash by Juan Mesa">
+<meta property="og:description" content="Roll the dice. Unleash your powers. Conquer the city.">
+<meta property="og:image" content="https://juanmmesa3d.github.io/empire-clash/case-study/img/keyart_v2.jpg">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Empire Clash by Juan Mesa</title>
+</head>
+<body>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik:wght@400;500;700&display=swap">
+<style>
+/* Layout: launch page that turns into a case study, same family as Remix Run.
+   Full-bleed key art, stats strip, roster, how it plays, balance chart, making-of timeline, contact. One committed night-city look. */
+:root{
+  --night:#0E0B22; --band:#17123A; --panel:#211A4E; --panel-2:#2B235F; --line:#3A3175;
+  --ink:#F5F2FF; --muted:#B8B0DD; --gold:#FFB627; --pink:#FF4FA3; --cyan:#38D0FF; --violet:#A77BFF; --red:#FF4A5E; --orange:#FF9A2E;
+  --display:'Bungee','Arial Black',Impact,sans-serif;
+  --body:'Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --gut:max(16px, env(safe-area-inset-left, 0px));
+  --gut-r:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+img{max-width:100%;display:block}
+a{color:var(--gold)}
+a:hover{color:#FFD77A}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut-r)}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.05;margin:0;text-wrap:balance}
+h2{font-size:clamp(30px,4.6vw,52px)}
+h3{font-size:21px}
+p{margin:0}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--pink)}
+.lede{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:62ch}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 28px;border-radius:16px;font-family:var(--display);font-size:19px;text-decoration:none;color:#241000;background:var(--gold);box-shadow:0 6px 0 #9A4A00;transition:transform .12s,box-shadow .12s}
+.btn:hover{color:#241000;transform:translateY(-2px);box-shadow:0 8px 0 #9A4A00}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #9A4A00}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border:2px solid rgba(255,255,255,.35);font-family:var(--body);font-weight:700;font-size:16px}
+.btn.ghost:hover{border-color:#fff;color:#fff}
+
+/* hero */
+.hero{position:relative;background:var(--night)}
+.hero-art{position:relative;width:100%;aspect-ratio:1400/644;max-height:620px;overflow:hidden;background:#24164f}
+.hero-art img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hero-art::after{content:"";position:absolute;inset:auto 0 0;height:38%;background:linear-gradient(180deg,rgba(14,11,34,0),var(--night))}
+.hero-in{position:relative;margin-top:-28px;display:flex;flex-direction:column;align-items:flex-start;gap:18px;padding-bottom:8px}
+.tag{display:inline-flex;gap:14px;font-family:var(--display);font-size:clamp(13px,1.6vw,17px);letter-spacing:.3em;background:var(--panel);padding:10px 16px;border-radius:12px;border:1px solid var(--line)}
+.tag i{font-style:normal;color:var(--pink)}
+.hero h1{font-size:clamp(30px,5vw,60px);max-width:18ch}
+.hero h1 span{color:var(--gold)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.credit{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding-block:18px;margin-top:28px;font-size:15px;color:var(--muted);border-top:1px solid var(--line)}
+.credit b{color:var(--ink)}
+
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;background:var(--line);border-radius:18px;overflow:hidden;margin-block:clamp(24px,4vw,48px)}
+.stat{background:var(--band);padding:20px 18px;display:flex;flex-direction:column;gap:4px}
+.stat b{font-family:var(--display);font-weight:400;font-size:clamp(30px,4vw,46px);line-height:1;color:var(--gold);font-variant-numeric:tabular-nums}
+.stat span{font-size:14px;color:var(--muted)}
+
+section{padding-block:clamp(56px,8vw,104px)}
+.band{background:var(--band)}
+.head{display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(26px,4vw,44px)}
+
+/* roster */
+.roster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.hcard{background:var(--panel);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-width:0;position:relative}
+.hcard::before{content:"";position:absolute;inset:0 0 auto;height:6px;background:var(--c);z-index:1}
+.hcard img{aspect-ratio:16/9;object-fit:cover;width:100%}
+.hcard .tx{padding:14px 16px 18px;display:flex;flex-direction:column;gap:10px}
+.hcard h3{color:var(--c)}
+.role{font-size:13px;color:var(--muted);margin-top:-6px}
+.pas{font-size:14px;color:var(--ink);background:var(--panel-2);border-radius:10px;padding:8px 10px}
+.abil{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--muted)}
+.abil b{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.hcard.intro{background:linear-gradient(160deg,#3B1F7A,#1B1440);padding:22px;gap:14px;justify-content:center}
+.hcard.intro::before{display:none}
+.hcard.intro p{color:var(--muted);font-size:15px}
+
+/* play */
+.shots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.shot{margin:0;background:var(--panel);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.shot img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.shot figcaption{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px;font-size:15px;color:var(--muted)}
+.shot figcaption b{color:var(--ink);font-size:16px}
+.s-big{grid-column:span 4;grid-row:span 2}
+.s-big img{flex:1;min-height:0;aspect-ratio:auto}
+.s-side{grid-column:span 2}
+.loop{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;counter-reset:l}
+.loop li{background:var(--panel);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:8px;counter-increment:l;min-width:0}
+.loop li::before{content:counter(l);font-family:var(--display);font-size:28px;line-height:1;color:var(--gold)}
+.loop b{font-size:16px}
+.loop span{font-size:14px;color:var(--muted)}
+.clash{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(20px,4vw,48px);align-items:center;margin-top:clamp(40px,6vw,64px)}
+.clash .txt{display:flex;flex-direction:column;gap:14px}
+.clash ul{margin:0;padding-left:20px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.clash ul b{color:var(--ink)}
+.meter{position:relative;height:46px;border-radius:12px;background:#0A081C;border:1px solid var(--line);overflow:hidden}
+.meter .zone{position:absolute;top:0;bottom:0;left:52%;width:18%;background:linear-gradient(90deg,rgba(255,182,39,.15),rgba(255,182,39,.55),rgba(255,182,39,.15))}
+.meter .core{position:absolute;top:0;bottom:0;left:59.5%;width:5%;background:var(--gold);opacity:.85}
+.meter .needle{position:absolute;top:-2px;bottom:-2px;width:4px;margin-left:-2px;background:#fff;box-shadow:0 0 10px #fff,0 0 18px var(--cyan);border-radius:2px;left:10%;animation:swing 1.6s ease-in-out infinite alternate}
+@keyframes swing{to{left:90%}}
+.clash figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.clash figure img{border-radius:18px;border:2px solid var(--pink)}
+.clash figcaption{font-size:13px;color:var(--muted)}
+
+/* live ops */
+.collect{display:grid;grid-template-columns:2fr 1.6fr 1.3fr 1fr 1fr;gap:14px}
+.collect figure{margin:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.collect img{width:100%;height:clamp(200px,24vw,280px);object-fit:cover;border-radius:16px}
+.collect figcaption{font-size:14px;color:var(--muted)}
+.collect figcaption b{display:block;color:var(--ink);font-size:15px}
+.note{background:var(--panel-2);border-radius:14px;padding:14px 16px;font-size:15px;color:var(--ink)}
+.note b{color:var(--gold)}
+
+/* making of */
+.roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:clamp(36px,5vw,60px)}
+.roles div{background:var(--panel);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.roles h3{font-size:17px}
+.roles div:first-child h3{color:var(--gold)}
+.roles div:last-child h3{color:var(--cyan)}
+.roles p{font-size:15px;color:var(--muted)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(40px,6vw,72px);counter-reset:s}
+.step{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,4vw,48px);align-items:start;counter-increment:s}
+.step:nth-child(even) .txt{order:2}
+.txt{display:flex;flex-direction:column;gap:12px}
+.step .txt{position:sticky;top:20px}
+.num{font-family:var(--display);font-size:15px;color:#241000;background:var(--gold);border-radius:10px;padding:5px 10px;align-self:flex-start}
+.num::before{content:"Step " counter(s)}
+.txt p{color:var(--muted);font-size:16px}
+.txt p b{color:var(--ink)}
+.vis{display:flex;flex-direction:column;gap:12px;min-width:0}
+.vis img{border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.vis figure{margin:0;display:flex;flex-direction:column;gap:8px}
+.vis figcaption{font-size:13px;color:var(--muted)}
+.ba{display:flex;justify-content:space-between;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 4px}
+.ba span:last-child{color:var(--cyan)}
+.thumbs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.thumbs .full{grid-column:1/-1}
+.concept{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.concept q{font-family:var(--display);font-size:clamp(18px,2.2vw,24px);line-height:1.2;quotes:none;color:var(--ink)}
+.concept .vs2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.concept .vs2 div{border-radius:12px;padding:12px 14px;font-size:14px;color:var(--muted);background:var(--panel-2)}
+.concept .vs2 div b{display:block;color:var(--ink)}
+.concept .vs2 .pick{outline:2px solid var(--gold)}
+.concept .vs2 .pick b::after{content:"  ✓ chosen";color:var(--gold);font-size:12px;letter-spacing:.08em}
+
+/* balance chart */
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.chart h4{margin:0;font-size:15px;font-weight:700}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.rows{display:flex;flex-direction:column;gap:10px}
+.r{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;align-items:center;font-size:13px}
+.r>span{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars{display:flex;flex-direction:column;gap:3px;position:relative}
+.bar{height:12px;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:flex-end}
+.bar em{font-style:normal;font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);transform:translateX(calc(100% + 6px))}
+.bar.b{background:#5B4E9E}
+.bar.a{background:var(--gold)}
+.r.flag>span{color:var(--gold);font-weight:700}
+.axis{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;font-size:11px;color:var(--muted)}
+.axis div{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+
+/* contact */
+.contact-in{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,5vw,60px);align-items:center}
+.links{display:flex;flex-direction:column;gap:10px}
+.links a{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;text-decoration:none;color:var(--ink);font-weight:700;min-height:56px}
+.links a:hover{border-color:var(--gold);color:var(--ink)}
+.links small{color:var(--muted);font-weight:400;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.mail{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 10px 10px 18px;font-weight:700;min-height:56px}
+.mail span{display:flex;flex-direction:column;min-width:0}
+.mail small{color:var(--muted);font-weight:400;font-size:13px;user-select:all;-webkit-user-select:all}
+.mail button{appearance:none;border:0;border-radius:10px;min-height:40px;padding:0 16px;background:var(--gold);color:#241000;font:inherit;font-weight:700;cursor:pointer}
+footer{padding-block:28px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
+
+@media (max-width:980px){
+  .roster{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .s-big,.s-side{grid-column:1/-1;grid-row:auto}
+  .loop{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .loop li:last-child{grid-column:1/-1}
+  .clash,.step,.contact-in{grid-template-columns:1fr}
+  .step:nth-child(even) .txt{order:0}
+  .step .txt{position:static}
+  .collect{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats .stat:last-child{grid-column:1/-1}
+  .roster{grid-template-columns:1fr}
+  .roles,.thumbs{grid-template-columns:1fr}
+  .collect{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .collect figure:first-child{grid-column:1/-1}
+  .r,.axis{grid-template-columns:92px minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){.meter .needle{animation:none;left:61%}.btn{transition:none}}
+</style>
+
+<header class="hero">
+  <div class="hero-art"><img src="img/keyart_v2.jpg" alt="Empire Clash key art: Captain Vector, Neon, The Sentinel, Vanguard, Catalyst, Arcstar and Astra Vex behind the Empire Clash logo"></div>
+  <div class="wrap hero-in">
+    <div class="eyebrow">A playable prototype by Juan Mesa</div>
+    <div class="tag" aria-label="Roll, Capture, Clash">ROLL <i>&bull;</i> CAPTURE <i>&bull;</i> CLASH</div>
+    <h1>Roll the dice. Unleash your powers. <span>Conquer the city.</span></h1>
+    <p class="lede">A mobile superhero strategy board game. Seven original heroes roll, capture and fight for control of Nova City. I took it from a one-page idea to character sheets, a balanced playable prototype and a pitch deck in one day.</p>
+    <div class="cta">
+      <a class="btn" href="https://juanmmesa3d.github.io/empire-clash/" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"></path></svg>Play Empire Clash</a>
+      <a class="btn ghost" href="#making">How I made it</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="credit">
+      <span><b>Juan Mesa</b>: concept, character design, art direction and game design</span>
+      <span>Code, balance simulation and asset pipeline built with Claude</span>
+    </div>
+    <div class="stats" role="list" aria-label="Project in numbers">
+      <div class="stat" role="listitem"><b>7</b><span>playable heroes</span></div>
+      <div class="stat" role="listitem"><b>21</b><span>abilities with real rules</span></div>
+      <div class="stat" role="listitem"><b>20</b><span>board tiles in Nova City</span></div>
+      <div class="stat" role="listitem"><b>700</b><span>simulated matches for balance</span></div>
+      <div class="stat" role="listitem"><b>1</b><span>day, idea to pitch deck</span></div>
+    </div>
+  </div>
+
+  <!-- ROSTER -->
+  <section class="band" aria-labelledby="roster-h">
+    <div class="wrap">
+      <div class="head">
+        <div class="eyebrow">The roster</div>
+        <h2 id="roster-h">Pick a hero. Pick a strategy.</h2>
+        <p class="lede">Every hero has a passive and three abilities taken straight from their character sheet. You use one ability per turn, before you roll.</p>
+      </div>
+      <div class="roster">
+        <article class="hcard" style="--c:var(--red)"><img src="img/face_vector.jpg" alt="Captain Vector"><div class="tx"><h3>Captain Vector</h3><p class="role">Leader · economy</p><p class="pas">Tolls he collects pay 30% more.</p>
+          <ul class="abil"><li><b>Rally</b>Collect income from every district he owns.</li><li><b>Command</b>Capture any unclaimed district from anywhere.</li><li><b>Support</b>+25 power in his next Clash.</li></ul></div></article>
+        <article class="hcard" style="--c:var(--pink)"><img src="img/face_astra.jpg" alt="Astra Vex"><div class="tx"><h3>Astra Vex</h3><p class="role">Infiltrator · disruption</p><p class="pas">+10 Clash attack.</p>
+          <ul class="abil"><li><b>Phase Dash</b>Roll 3 dice, move with the best two.</li><li><b>Hack</b>Drop a rival district a level, or steal an Outpost.</li><li><b>Decoy</b>The next attack on her fails.</li></ul></div></article>
+        <article class="hcard" style="--c:var(--gold)"><img src="img/face_sentinel.jpg" alt="The Sentinel"><div class="tx"><h3>The Sentinel</h3><p class="role">Guardian · defense</p><p class="pas">+10 defense. +1 EP each turn while holding 3+ districts.</p>
+          <ul class="abil"><li><b>Barrier</b>Seal one district for 2 rounds.</li><li><b>Protect</b>All his districts defend at +25.</li><li><b>Lockdown</b>None of his districts can be attacked until his next turn.</li></ul></div></article>
+        <article class="hcard" style="--c:var(--orange)"><img src="img/face_vanguard.jpg" alt="Vanguard"><div class="tx"><h3>Vanguard</h3><p class="role">Tank · frontline</p><p class="pas">+18 Clash defense.</p>
+          <ul class="abil"><li><b>Shield Wall</b>Upgrade his weakest district for free.</li><li><b>Ground Slam</b>Rivals within 3 tiles pay ¢100 and get knocked back.</li><li><b>Taunt</b>Rivals on his districts must Clash him.</li></ul></div></article>
+        <article class="hcard" style="--c:var(--pink)"><img src="img/face_neon.jpg" alt="Neon"><div class="tx"><h3>Neon</h3><p class="role">Speedster · tempo</p><p class="pas">Passing Nova Plaza pays her double.</p>
+          <ul class="abil"><li><b>Boost</b>Pick her exact move, 2 to 12.</li><li><b>Jam</b>The leading rival’s abilities lose 2 turns of charge.</li><li><b>Clone</b>A second move this turn.</li></ul></div></article>
+        <article class="hcard" style="--c:var(--cyan)"><img src="img/face_arcstar.jpg" alt="Arcstar"><div class="tx"><h3>Arcstar</h3><p class="role">Ranger · long range</p><p class="pas">+8 Clash attack.</p>
+          <ul class="abil"><li><b>Mark</b>+30 in his next Clash on a marked district.</li><li><b>Orbital Strike</b>Clash any rival district from anywhere.</li><li><b>Reposition</b>Teleport to any district and act there.</li></ul></div></article>
+        <article class="hcard" style="--c:var(--violet)"><img src="img/face_catalyst.jpg" alt="Catalyst"><div class="tx"><h3>Catalyst</h3><p class="role">Scientist · traps</p><p class="pas">+¢60 every turn.</p>
+          <ul class="abil"><li><b>Deploy Node</b>A trap tile: rivals who land there pay ¢120.</li><li><b>Amplify</b>Her next capture or upgrade is free.</li><li><b>Reaction</b>Rivals near her Nodes pay ¢120 each.</li></ul></div></article>
+        <article class="hcard intro"><h3 style="color:var(--gold)">7 heroes, 7 ways to win</h3><p>Captain Vector builds an economy. The Sentinel turtles. Catalyst owns the board without owning districts. Arcstar hits from across the map.</p><p>Choosing a hero changes how you read every roll.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section aria-labelledby="play-h">
+    <div class="wrap">
+      <div class="head">
+        <div class="eyebrow">How it plays</div>
+        <h2 id="play-h">Familiar loop, hero-sized twist</h2>
+        <p class="lede">The roll-capture-build rhythm of MONOPOLY GO!, with the powers and rivalries of a superhero game. Matches run 8 rounds against three rivals.</p>
+      </div>
+      <div class="shots">
+        <figure class="shot s-big"><img src="img/env.jpg" alt="Nova City: a ring of colored board tiles on floating islands around a crystal spire"><figcaption><b>Nova City</b>20 tiles: 16 districts across Neon Docks, Skyline, Foundry and Crown Ward, plus Nova Plaza, Power Surge, Mission and Rift Gate on the corners.</figcaption></figure>
+        <figure class="shot s-side"><img src="img/hud.jpg" alt="Gameplay target screen with leaderboard, ability bar and roll button"><figcaption><b>Target screen</b>Live standings, the hero’s ability bar and a one-thumb Roll.</figcaption></figure>
+        <figure class="shot s-side"><img src="img/cards.jpg" alt="Glowing ability cards and a die"><figcaption><b>Abilities as cards</b>Each ability has its own charge time, from 2 to 4 turns.</figcaption></figure>
+      </div>
+      <ol class="loop" aria-label="A turn, step by step">
+        <li><b>Roll and move</b><span>Two dice move your hero around the city.</span></li>
+        <li><b>Capture and build</b><span>Outpost, Tower, HQ: worth 1, 3 and 6 Empire Points.</span></li>
+        <li><b>Use an ability</b><span>One per turn, before the roll.</span></li>
+        <li><b>Clash for control</b><span>On a rival’s district: pay the toll or fight.</span></li>
+        <li><b>Win in 8 rounds</b><span>Most Empire Points rules Nova City.</span></li>
+      </ol>
+      <div class="clash">
+        <div class="txt">
+          <div class="eyebrow">The signature moment</div>
+          <h2 style="font-size:clamp(26px,3.6vw,40px)">The Empire Clash</h2>
+          <p class="lede">A 10–15 second timing duel when two heroes fight over a district. Stop the needle in the gold zone three times.</p>
+          <div class="meter" aria-hidden="true"><div class="zone"></div><div class="core"></div><div class="needle"></div></div>
+          <ul>
+            <li><b>Win:</b> capture the district, or knock it down a level, and earn +2 EP.</li>
+            <li><b>Lose:</b> pay double toll.</li>
+            <li>When a rival attacks you, the same meter becomes your block.</li>
+          </ul>
+        </div>
+        <figure><img src="img/action.jpg" alt="Heroes racing across Nova City as dice fly overhead"><figcaption>Real hero action, short enough that the board game never stops.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE OPS -->
+  <section class="band" aria-labelledby="ops-h">
+    <div class="wrap">
+      <div class="head">
+        <div class="eyebrow">Live-ops</div>
+        <h2 id="ops-h">What players collect</h2>
+        <p class="lede">Every hero sheet already ships 3 skin variants and 4 emotes: 21 skins and 28 emotes before the first season. The rest of the store is designed around the board.</p>
+      </div>
+      <div class="collect">
+        <figure><img src="img/plaza.jpg" alt="Seasonal city plaza with banners and a hero statue"><figcaption><b>Seasonal cities</b>New board themes each season.</figcaption></figure>
+        <figure><img src="img/banners.jpg" alt="Row of glowing district banners in six colors"><figcaption><b>District banners</b>Rise as a district upgrades.</figcaption></figure>
+        <figure><img src="img/chest.jpg" alt="Reward chest with gems and coins"><figcaption><b>Reward chests</b>Season rewards.</figcaption></figure>
+        <figure><img src="img/vehicle.jpg" alt="Hover vehicle"><figcaption><b>Vehicles</b>Board tokens.</figcaption></figure>
+        <figure><img src="img/trophy.jpg" alt="Golden winged trophy topped with a die"><figcaption><b>Trophies</b>Ranked seasons.</figcaption></figure>
+      </div>
+      <p class="note" style="margin-top:20px"><b>The key idea:</b> the banner that marks who owns a district is also the cosmetic you sell. Gameplay, art and monetization meet on the same tile.</p>
+    </div>
+  </section>
+
+  <!-- MAKING OF -->
+  <section id="making" aria-labelledby="make-h">
+    <div class="wrap">
+      <div class="head">
+        <div class="eyebrow">How I made it</div>
+        <h2 id="make-h">From a one-page idea to a pitch-ready game</h2>
+        <p class="lede">I ran this the way I’d lead a character team: I set the direction, made the art, reviewed every build and decided what changed. Claude was my engineer, writing the game, running the balance simulations and turning my art into game assets.</p>
+      </div>
+      <div class="roles">
+        <div><h3>What I did</h3><p>Concept and creative direction, the seven-hero roster, all character sheets, key art, environment and live-ops props, ability design, and review of every build.</p></div>
+        <div><h3>What Claude did</h3><p>Game code and rules, the Clash minigame, AI opponents, 700-match balance simulations, cropping my sheets into portraits, and the pitch deck layout.</p></div>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>Pick a direction</h3>
+            <p>It started as one page: a superhero take on a dice-and-property game, with seven heroes fighting for a city. The first real decision was what kind of game it should be.</p>
+            <p>A MONOPOLY GO! clone with powers would be easy to explain but forgettable. I chose <b>a superhero strategy game with dice and territory control</b>, where your hero changes how you play the board.</p>
+          </div>
+          <div class="vis"><div class="concept"><q>Roll the dice. Unleash your powers. Conquer the city.</q>
+            <div class="vs2"><div><b>Monopoly GO! + powers</b>Familiar, but a reskin.</div><div class="pick"><b>Strategy + territory</b>Heroes change the strategy.</div></div></div></div>
+        </li>
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>Key art, then a playable build</h3>
+            <p>The first key art set the tone: a bright floating city, a board ring and seven heroes. From it I had a playable prototype the same afternoon: a 20-tile board, dice, district upgrades, AI rivals and the Clash timing duel.</p>
+            <p>The first build cropped its hero portraits straight from this key art, so the game had faces before the characters were final.</p>
+          </div>
+          <div class="vis"><figure><img src="img/keyart_v1.jpg" alt="First Empire Clash key art with seven heroes over a board ring and dice"><figcaption>Key art v1: the starting point.</figcaption></figure></div>
+        </li>
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>A full sheet for every hero</h3>
+            <p>Each hero got a production sheet: a five-view turnaround, expressions, chibi emotes, gear callouts, three abilities and three skins. As the sheets came in, the game swapped in their art.</p>
+            <p>The sheets also exposed overlaps across the roster: two heroes shared a hex-dome icon, two had a clone ability and two used crosshairs. Those became notes for the next icon pass.</p>
+          </div>
+          <div class="vis thumbs">
+            <figure class="full"><img src="img/sheet_vector.jpg" alt="Captain Vector character sheet"><figcaption>Captain Vector’s sheet.</figcaption></figure>
+            <figure><img src="img/sheet_neon.jpg" alt="Neon character sheet"><figcaption>Neon.</figcaption></figure>
+            <figure><img src="img/sheet_sentinel.jpg" alt="The Sentinel character sheet"><figcaption>The Sentinel.</figcaption></figure>
+          </div>
+        </li>
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>Turn 21 ability icons into rules</h3>
+            <p>Every ability on the sheets became a real mechanic. Some target a tile, like <b>Hack</b>, <b>Mark</b> or <b>Deploy Node</b>. Some protect, like <b>Barrier</b> or <b>Lockdown</b>. Some bend movement, like <b>Boost</b>, <b>Phase Dash</b> or <b>Reposition</b>.</p>
+            <p>Each one shows what it does before you commit, and targeted ones light up the tiles you can pick. Nodes, Marks and sealed districts each read differently on the board.</p>
+          </div>
+          <div class="vis thumbs">
+            <figure class="full"><img src="img/sheet_catalyst.jpg" alt="Catalyst character sheet with Deploy Node, Amplify and Reaction abilities"><figcaption>Catalyst’s three icons became Nodes, a free build and a chain reaction.</figcaption></figure>
+            <figure><img src="img/sheet_arcstar.jpg" alt="Arcstar character sheet"><figcaption>Arcstar: Mark, Orbital Strike, Reposition.</figcaption></figure>
+            <figure><img src="img/sheet_vanguard.jpg" alt="Vanguard character sheet"><figcaption>Vanguard: Shield Wall, Ground Slam, Taunt.</figcaption></figure>
+          </div>
+        </li>
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>Balance with 700 simulated matches</h3>
+            <p>To check the roster, Claude ran 700 matches with AI players only. Two heroes fell behind: <b>Catalyst</b> averaged 5.6 Empire Points and <b>The Sentinel</b> 6.3, while the leaders scored nearly 10.</p>
+            <p>The fix kept each hero’s identity. The Sentinel now earns +1 EP per turn while holding 3+ districts, which rewards turtling. Catalyst’s Nodes and Reaction now pay EP as well as credits. After the change, every hero averages between 8 and 10.</p>
+          </div>
+          <div class="vis">
+            <div class="chart" role="img" aria-label="Average Empire Points per hero before and after balancing. Before: Astra Vex 9.8, Captain Vector 8.0, Vanguard 9.1, The Sentinel 6.3, Neon 7.9, Arcstar 8.4, Catalyst 5.6. After: Astra Vex 9.3, Captain Vector 8.1, Vanguard 9.0, The Sentinel 8.2, Neon 8.0, Arcstar 8.0, Catalyst 9.9.">
+              <h4>Average Empire Points per hero</h4>
+              <div class="legend"><span><i style="background:#5B4E9E"></i>Before</span><span><i style="background:var(--gold)"></i>After</span></div>
+              <div class="rows" id="rows"></div>
+              <div class="axis"><span></span><div><span>0</span><span>5</span><span>10</span></div></div>
+            </div>
+          </div>
+        </li>
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>Repaint the cover to match the roster</h3>
+            <p>Once all seven sheets existed, the first key art no longer matched. Catalyst and Arcstar had been redesigned, Neon’s look had changed, and Astra Vex wasn’t on it at all.</p>
+            <p>I repainted the cover from the final sheets so every hero on the box is the hero you play.</p>
+          </div>
+          <div class="vis">
+            <div class="ba"><span>Key art v1</span><span>Final cover</span></div>
+            <div class="thumbs"><img src="img/keyart_v1.jpg" alt="First key art with the early hero designs"><img src="img/keyart_v2.jpg" alt="Final cover with all seven heroes as on their sheets"></div>
+          </div>
+        </li>
+        <li class="step">
+          <div class="txt">
+            <span class="num"></span>
+            <h3>Package it as a pitch</h3>
+            <p>Last, everything went into a 19-slide pitch deck: the hook, the match loop, the Clash, Nova City, one slide per hero sheet, the target screen, live-ops, art direction, the production pipeline and the prototype.</p>
+            <p class="note">What I learned: a playable build answers questions a deck can’t. Balancing in simulation took minutes and changed two heroes before anyone had to play a bad match.</p>
+          </div>
+          <div class="vis"><figure><img src="img/cover.jpg" alt="Empire Clash cover used on the pitch deck title slide"><figcaption>The deck’s title slide art.</figcaption></figure></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="band" aria-labelledby="contact-h">
+    <div class="wrap contact-in">
+      <div class="head" style="margin:0">
+        <div class="eyebrow">About me</div>
+        <h2 id="contact-h">Juan Mesa</h2>
+        <p class="lede">Lead Character Artist with 15+ years in AAA games, including EA Sports, Activision, WB Games and NVIDIA. I build at the meeting point of character art, creative direction and generative AI: real art direction, shipped as playable prototypes.</p>
+        <div class="cta" style="margin-top:8px"><a class="btn" href="https://juanmmesa3d.github.io/empire-clash/" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"></path></svg>Play Empire Clash</a></div>
+      </div>
+      <nav class="links" aria-label="Find me online">
+        <a href="https://www.linkedin.com/in/juanmesa3d" target="_blank" rel="noopener">LinkedIn <small>linkedin.com/in/juanmesa3d</small></a>
+        <a href="https://jmesa3d.artstation.com" target="_blank" rel="noopener">ArtStation <small>jmesa3d.artstation.com</small></a>
+        <a href="https://juanmmesa.wixsite.com" target="_blank" rel="noopener">Website <small>juanmmesa.wixsite.com</small></a>
+        <div class="mail"><span>Email <small id="mailAddr">juanmmesa@gmail.com</small></span><button type="button" id="copyMail">Copy</button></div>
+      </nav>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap">Empire Clash is a playable prototype. Characters, concept art and design by Juan Mesa. Built with Claude.</div></footer>
+<script>
+(function(){
+  var D=[['Astra Vex',9.8,9.3],['Captain Vector',8.0,8.1],['Vanguard',9.1,9.0],['The Sentinel',6.3,8.2,1],['Neon',7.9,8.0],['Arcstar',8.4,8.0],['Catalyst',5.6,9.9,1]];
+  var rows=document.getElementById('rows'),MAX=10.5;
+  D.forEach(function(d){
+    var r=document.createElement('div');r.className='r'+(d[3]?' flag':'');
+    r.innerHTML='<span>'+d[0]+'</span><div class="bars"><div class="bar b" style="width:'+(d[1]/MAX*100*.9)+'%"><em>'+d[1].toFixed(1)+'</em></div><div class="bar a" style="width:'+(d[2]/MAX*100*.9)+'%"><em>'+d[2].toFixed(1)+'</em></div></div>';
+    rows.appendChild(r);
+  });
+  var ax=document.querySelector('.axis div');ax.style.width='calc('+(10/MAX*90)+'% + 0px)';
+  var b=document.getElementById('copyMail'),t=document.getElementById('mailAddr');
+  b.addEventListener('click',function(){
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1800)};
+    var pick=function(){var r=document.createRange();r.selectNodeContents(t);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected'};
+    try{navigator.clipboard.writeText(t.textContent).then(done,pick)}catch(e){pick()}
+  });
+})();
+</script>
+
+</body>
+</html>

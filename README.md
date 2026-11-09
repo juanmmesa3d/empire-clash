@@ -4,6 +4,8 @@ A superhero strategy board game for mobile. Seven original heroes roll the dice,
 
 **Play:** https://juanmmesa3d.github.io/empire-clash/
 
+**Case study:** https://juanmmesa3d.github.io/empire-clash/case-study/ (the roster, how it plays, live-ops and how it was made)
+
 - 7 heroes, each with a passive and 3 abilities
 - 20-tile isometric board with Outposts, Towers and HQs
 - Empire Clash timing duel, AI rivals, 8-round matches
