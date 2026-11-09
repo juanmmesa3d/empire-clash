@@ -181,6 +181,28 @@ section{padding-block:clamp(56px,8vw,104px)}
 .mail button{appearance:none;border:0;border-radius:10px;min-height:40px;padding:0 16px;background:var(--gold);color:#241000;font:inherit;font-weight:700;cursor:pointer}
 footer{padding-block:28px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
 
+/* character sheets */
+.sheets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.sheet{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-width:0;position:relative}
+.sheet::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:var(--c);z-index:1}
+.sheet button{all:unset;cursor:zoom-in;display:block;background:#0b0920}
+.sheet button:focus-visible{outline:3px solid var(--cyan);outline-offset:-3px}
+.sheet img{width:100%;aspect-ratio:3/2;object-fit:contain;transition:transform .3s}
+.sheet button:hover img{transform:scale(1.02)}
+.sheet figcaption{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px}
+.sheet figcaption b{font-family:var(--display);font-weight:400;font-size:19px;color:var(--c)}
+.sheet figcaption span{font-size:14px;color:var(--muted)}
+.sheet.feat{grid-column:1/-1}
+.sheet.feat figcaption{flex-direction:row;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 16px;padding:16px 20px 18px}
+.sheet.feat figcaption b{font-size:26px}
+.sheet .tag3{display:inline-block;margin-right:8px;vertical-align:1px;font-size:11px;padding:3px 8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--gold);color:#241000;border-radius:8px}
+.inc{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.inc span{font-size:13px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(6,4,18,.94);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px}
+.lb button{position:absolute;top:max(14px,env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:22px;cursor:pointer}
+.lb p{position:absolute;bottom:max(14px,env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:14px;color:var(--muted)}
+@media (max-width:620px){.sheets{grid-template-columns:1fr}.sheet.feat figcaption b{font-size:22px}}
 @media (max-width:980px){
   .roster{grid-template-columns:repeat(2,minmax(0,1fr))}
   .s-big,.s-side{grid-column:1/-1;grid-row:auto}
@@ -257,6 +279,48 @@ footer{padding-block:28px;font-size:14px;color:var(--muted);border-top:1px solid
         <article class="hcard" style="--c:var(--violet)"><img src="img/face_catalyst.jpg" alt="Catalyst"><div class="tx"><h3>Catalyst</h3><p class="role">Scientist · traps</p><p class="pas">+¢60 every turn.</p>
           <ul class="abil"><li><b>Deploy Node</b>A trap tile: rivals who land there pay ¢120.</li><li><b>Amplify</b>Her next capture or upgrade is free.</li><li><b>Reaction</b>Rivals near her Nodes pay ¢120 each.</li></ul></div></article>
         <article class="hcard intro"><h3 style="color:var(--gold)">7 heroes, 7 ways to win</h3><p>Captain Vector builds an economy. The Sentinel turtles. Catalyst owns the board without owning districts. Arcstar hits from across the map.</p><p>Choosing a hero changes how you read every roll.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHEETS -->
+  <section aria-labelledby="sheets-h">
+    <div class="wrap">
+      <div class="head">
+        <div class="eyebrow">Character sheets</div>
+        <h2 id="sheets-h">Every hero, fully designed</h2>
+        <p class="lede">I designed a production sheet for each of the seven heroes, the same way I'd hand a character off to a 3D team. Tap any sheet to see it full size.</p>
+        <div class="inc" aria-label="What each sheet includes"><span>5-view turnaround</span><span>Expressions</span><span>Chibi emotes</span><span>Gear callouts</span><span>3 abilities with icons</span><span>3 skins</span></div>
+      </div>
+      <div class="sheets">
+        <figure class="sheet feat" style="--c:#FF4FA3">
+          <button type="button" data-full="img/sheet_astra.jpg" data-name="Astra Vex" aria-label="View Astra Vex's character sheet full screen"><img src="img/sheet_astra.jpg" alt="Astra Vex character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="eager"></button>
+          <figcaption><b>Astra Vex</b><span><span class="tag3">Featured sheet</span> Infiltrator · tap to view full screen</span></figcaption>
+        </figure>
+        <figure class="sheet" style="--c:#FF4A5E">
+          <button type="button" data-full="img/sheet_vector.jpg" data-name="Captain Vector" aria-label="View Captain Vector's character sheet full screen"><img src="img/sheet_vector.jpg" alt="Captain Vector character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="lazy"></button>
+          <figcaption><b>Captain Vector</b><span>Leader</span></figcaption>
+        </figure>
+        <figure class="sheet" style="--c:#FFB627">
+          <button type="button" data-full="img/sheet_sentinel.jpg" data-name="The Sentinel" aria-label="View The Sentinel's character sheet full screen"><img src="img/sheet_sentinel.jpg" alt="The Sentinel character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="lazy"></button>
+          <figcaption><b>The Sentinel</b><span>Guardian</span></figcaption>
+        </figure>
+        <figure class="sheet" style="--c:#FF9A2E">
+          <button type="button" data-full="img/sheet_vanguard.jpg" data-name="Vanguard" aria-label="View Vanguard's character sheet full screen"><img src="img/sheet_vanguard.jpg" alt="Vanguard character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="lazy"></button>
+          <figcaption><b>Vanguard</b><span>Tank</span></figcaption>
+        </figure>
+        <figure class="sheet" style="--c:#FF4FA3">
+          <button type="button" data-full="img/sheet_neon.jpg" data-name="Neon" aria-label="View Neon's character sheet full screen"><img src="img/sheet_neon.jpg" alt="Neon character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="lazy"></button>
+          <figcaption><b>Neon</b><span>Speedster</span></figcaption>
+        </figure>
+        <figure class="sheet" style="--c:#38D0FF">
+          <button type="button" data-full="img/sheet_arcstar.jpg" data-name="Arcstar" aria-label="View Arcstar's character sheet full screen"><img src="img/sheet_arcstar.jpg" alt="Arcstar character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="lazy"></button>
+          <figcaption><b>Arcstar</b><span>Ranger</span></figcaption>
+        </figure>
+        <figure class="sheet" style="--c:#A77BFF">
+          <button type="button" data-full="img/sheet_catalyst.jpg" data-name="Catalyst" aria-label="View Catalyst's character sheet full screen"><img src="img/sheet_catalyst.jpg" alt="Catalyst character sheet: turnaround, expressions, emotes, gear, abilities and skins" loading="lazy"></button>
+          <figcaption><b>Catalyst</b><span>Scientist</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -452,6 +516,20 @@ footer{padding-block:28px;font-size:14px;color:var(--muted);border-top:1px solid
     try{navigator.clipboard.writeText(t.textContent).then(done,pick)}catch(e){pick()}
   });
 })();
+(function(){
+  var lb=null,last=null;
+  function close(){if(!lb)return;lb.remove();lb=null;document.body.style.overflow='';if(last)last.focus()}
+  document.querySelectorAll('.sheet button').forEach(function(b){
+    b.addEventListener('click',function(){
+      last=b;lb=document.createElement('div');lb.className='lb';lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');lb.setAttribute('aria-label',b.dataset.name+' character sheet');
+      lb.innerHTML='<img src="'+b.dataset.full+'" alt="'+b.dataset.name+' character sheet"><button type="button" aria-label="Close">\u2715</button><p>'+b.dataset.name+'</p>';
+      lb.addEventListener('click',function(e){if(e.target===lb||e.target.tagName==='BUTTON')close()});
+      document.body.appendChild(lb);document.body.style.overflow='hidden';lb.querySelector('button').focus();
+    });
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+})();
+
 </script>
 
 </body>
